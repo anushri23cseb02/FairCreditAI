@@ -35,6 +35,10 @@ class Settings(BaseSettings):
     mysql_user: str = Field(default="faircredit_user", alias="MYSQL_USER")
     mysql_password: str = Field(default="", alias="MYSQL_PASSWORD")
     database_url: str = Field(default="", alias="DATABASE_URL")
+    # Path to a CA cert file, required by some managed MySQL providers
+    # (e.g. Aiven) that mandate TLS. Blank locally/in docker-compose,
+    # where the DB connection doesn't need it.
+    db_ssl_ca_path: str = Field(default="", alias="DB_SSL_CA_PATH")
 
     # --- Backend ---
     backend_host: str = Field(default="0.0.0.0", alias="BACKEND_HOST")

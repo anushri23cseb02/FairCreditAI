@@ -21,12 +21,17 @@ logger = logging.getLogger(__name__)
 
 settings = get_settings()
 
+_connect_args = {}
+if settings.db_ssl_ca_path:
+    _connect_args["ssl"] = {"ca": settings.db_ssl_ca_path}
+
 # pool_pre_ping avoids handing out dead connections after MySQL restarts.
 engine = create_engine(
     settings.sqlalchemy_database_url,
     pool_pre_ping=True,
     pool_recycle=3600,
     echo=False,
+    connect_args=_connect_args,
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
