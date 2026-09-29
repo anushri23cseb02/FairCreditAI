@@ -1,0 +1,50 @@
+# Environment
+.env
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Data
+# The large HMDA raw file and its processed splits are NOT committed (hundreds of MB).
+# The small UCI credit-card raw file (CC BY 4.0) and its processed splits ARE committed
+# so Track A works straight after a clone. Everything below is small.
+data/raw/Washington_State_HDMA-2016*.csv
+data/processed/train.csv
+data/processed/val.csv
+data/processed/test.csv
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/reports/.gitkeep
+
+# Models: the trained artifacts + metadata + registry ARE committed (about 9 MB total) so a
+# fresh clone can serve predictions without retraining. Retrain with scripts/train_*.py.
+!models/artifacts/.gitkeep
+!models/metadata/.gitkeep
+!models/registry/.gitkeep
+
+# Reports
+reports/generated/*
+!reports/generated/.gitkeep
+
+# Streamlit
+.streamlit/secrets.toml
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.log
+.venv_check/

@@ -1,0 +1,83 @@
+/* FairCredit AI - pastel banking/fintech theme
+   Palette: off-white, light lavender, soft blue, soft green, soft peach, light gray
+   No neon, no gaming-style gradients, no oversized text. */
+
+:root {
+    --fc-bg: #FAF9F7;
+    --fc-surface: #FFFFFF;
+    --fc-lavender: #EDEBF7;
+    --fc-blue: #E3EEF6;
+    --fc-blue-strong: #7FA8C9;
+    --fc-green: #E6F2E9;
+    --fc-green-strong: #7FB98C;
+    --fc-peach: #FBEDE3;
+    --fc-gray: #F1F1F0;
+    --fc-text: #2F2E35;
+    --fc-text-muted: #6B6A72;
+    --fc-border: #E4E2E8;
+}
+
+html, body, [class*="css"] {
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color: var(--fc-text);
+}
+
+.stApp {
+    background-color: var(--fc-bg);
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background-color: var(--fc-lavender);
+    border-right: 1px solid var(--fc-border);
+}
+
+/* Cards */
+.fc-card {
+    background-color: var(--fc-surface);
+    border: 1px solid var(--fc-border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    margin-bottom: 1rem;
+}
+
+.fc-card-blue    { background-color: var(--fc-blue); }
+.fc-card-green   { background-color: var(--fc-green); }
+.fc-card-peach   { background-color: var(--fc-peach); }
+.fc-card-gray    { background-color: var(--fc-gray); }
+
+.fc-metric-label {
+    font-size: 0.85rem;
+    color: var(--fc-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.fc-metric-value {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--fc-text);
+}
+
+.fc-status-ok {
+    color: #3E7B5D;
+    font-weight: 600;
+}
+
+.fc-status-bad {
+    color: #B25A4B;
+    font-weight: 600;
+}
+
+.fc-header {
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--fc-border);
+    margin-bottom: 1rem;
+}
+
+/* Buttons */
+button[kind="primary"] {
+    background-color: var(--fc-blue-strong) !important;
+    border-color: var(--fc-blue-strong) !important;
+}

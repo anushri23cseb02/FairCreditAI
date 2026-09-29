@@ -1,0 +1,137 @@
+{
+  "sex": {
+    "attribute": "sex",
+    "column": "applicant_sex_name",
+    "privileged_group": "Male",
+    "comparison_group": "Female",
+    "group_sample_sizes": {
+      "Male": 29212,
+      "Female": 11703
+    },
+    "true_positive_rate_by_group": {
+      "Male": 0.6793,
+      "Female": 0.7376
+    },
+    "false_positive_rate_by_group": {
+      "Female": 0.4243,
+      "Male": 0.3427
+    },
+    "demographic_parity_difference": 0.084,
+    "demographic_parity_ratio": 0.8288,
+    "disparate_impact_ratio": 1.2066,
+    "equal_opportunity_difference": 0.0583,
+    "equalized_odds_difference": 0.0816,
+    "metric_definitions": {
+      "demographic_parity_difference": "max group selection rate minus min group selection rate. 0 = identical rates across groups.",
+      "demographic_parity_ratio": "min group selection rate divided by max group selection rate. 1.0 = identical rates.",
+      "disparate_impact_ratio": "comparison-group selection rate divided by privileged-group selection rate. Values below the commonly cited 0.80 'four-fifths rule' threshold are a widely used (not legally dispositive) flag for further review.",
+      "true_positive_rate_by_group": "of applicants who ACTUALLY have the denied outcome, the fraction the model also predicts that way, per group.",
+      "false_positive_rate_by_group": "of applicants who do NOT actually have the denied outcome, the fraction the model incorrectly predicts that way, per group.",
+      "equal_opportunity_difference": "comparison-group TPR minus privileged-group TPR. 0 = the model is equally likely to correctly identify the outcome in both groups.",
+      "equalized_odds_difference": "the larger of the TPR difference and FPR difference across groups (fairlearn's combined measure).",
+      "denial_rate_by_group": "P(model predicts denied) within each group."
+    },
+    "limitations": [
+      "These are statistical outcome comparisons on one historical dataset, not a legal determination of discrimination.",
+      "Rows with an unknown/not-provided value for this attribute are excluded from this specific comparison.",
+      "Group sample sizes differ; metrics for smaller groups carry more statistical uncertainty.",
+      "The model does not use this attribute as an input feature, but it can still show disparities if correlated features (e.g. geography-linked income fields) act as proxies."
+    ],
+    "denial_rate_by_group": {
+      "Male": 0.4068,
+      "Female": 0.4908
+    }
+  },
+  "race": {
+    "attribute": "race",
+    "column": "applicant_race_name_1",
+    "privileged_group": "White",
+    "comparison_group": "Black or African American",
+    "group_sample_sizes": {
+      "White": 32909,
+      "Black or African American": 1002
+    },
+    "true_positive_rate_by_group": {
+      "White": 0.7005,
+      "Black or African American": 0.7727
+    },
+    "false_positive_rate_by_group": {
+      "Black or African American": 0.398,
+      "White": 0.3732
+    },
+    "demographic_parity_difference": 0.0701,
+    "demographic_parity_ratio": 0.8613,
+    "disparate_impact_ratio": 1.1611,
+    "equal_opportunity_difference": 0.0723,
+    "equalized_odds_difference": 0.0723,
+    "metric_definitions": {
+      "demographic_parity_difference": "max group selection rate minus min group selection rate. 0 = identical rates across groups.",
+      "demographic_parity_ratio": "min group selection rate divided by max group selection rate. 1.0 = identical rates.",
+      "disparate_impact_ratio": "comparison-group selection rate divided by privileged-group selection rate. Values below the commonly cited 0.80 'four-fifths rule' threshold are a widely used (not legally dispositive) flag for further review.",
+      "true_positive_rate_by_group": "of applicants who ACTUALLY have the denied outcome, the fraction the model also predicts that way, per group.",
+      "false_positive_rate_by_group": "of applicants who do NOT actually have the denied outcome, the fraction the model incorrectly predicts that way, per group.",
+      "equal_opportunity_difference": "comparison-group TPR minus privileged-group TPR. 0 = the model is equally likely to correctly identify the outcome in both groups.",
+      "equalized_odds_difference": "the larger of the TPR difference and FPR difference across groups (fairlearn's combined measure).",
+      "denial_rate_by_group": "P(model predicts denied) within each group."
+    },
+    "limitations": [
+      "These are statistical outcome comparisons on one historical dataset, not a legal determination of discrimination.",
+      "Rows with an unknown/not-provided value for this attribute are excluded from this specific comparison.",
+      "Group sample sizes differ; metrics for smaller groups carry more statistical uncertainty.",
+      "The model does not use this attribute as an input feature, but it can still show disparities if correlated features (e.g. geography-linked income fields) act as proxies."
+    ],
+    "denial_rate_by_group": {
+      "White": 0.4349,
+      "Black or African American": 0.505
+    }
+  },
+  "ethnicity": {
+    "attribute": "ethnicity",
+    "column": "applicant_ethnicity_name",
+    "privileged_group": "Not Hispanic or Latino",
+    "comparison_group": "Hispanic or Latino",
+    "group_sample_sizes": {
+      "Not Hispanic or Latino": 36617,
+      "Hispanic or Latino": 2311
+    },
+    "true_positive_rate_by_group": {
+      "Not Hispanic or Latino": 0.697,
+      "Hispanic or Latino": 0.7236
+    },
+    "false_positive_rate_by_group": {
+      "Hispanic or Latino": 0.4186,
+      "Not Hispanic or Latino": 0.3635
+    },
+    "demographic_parity_difference": 0.0727,
+    "demographic_parity_ratio": 0.8545,
+    "disparate_impact_ratio": 1.1703,
+    "equal_opportunity_difference": 0.0266,
+    "equalized_odds_difference": 0.0552,
+    "metric_definitions": {
+      "demographic_parity_difference": "max group selection rate minus min group selection rate. 0 = identical rates across groups.",
+      "demographic_parity_ratio": "min group selection rate divided by max group selection rate. 1.0 = identical rates.",
+      "disparate_impact_ratio": "comparison-group selection rate divided by privileged-group selection rate. Values below the commonly cited 0.80 'four-fifths rule' threshold are a widely used (not legally dispositive) flag for further review.",
+      "true_positive_rate_by_group": "of applicants who ACTUALLY have the denied outcome, the fraction the model also predicts that way, per group.",
+      "false_positive_rate_by_group": "of applicants who do NOT actually have the denied outcome, the fraction the model incorrectly predicts that way, per group.",
+      "equal_opportunity_difference": "comparison-group TPR minus privileged-group TPR. 0 = the model is equally likely to correctly identify the outcome in both groups.",
+      "equalized_odds_difference": "the larger of the TPR difference and FPR difference across groups (fairlearn's combined measure).",
+      "denial_rate_by_group": "P(model predicts denied) within each group."
+    },
+    "limitations": [
+      "These are statistical outcome comparisons on one historical dataset, not a legal determination of discrimination.",
+      "Rows with an unknown/not-provided value for this attribute are excluded from this specific comparison.",
+      "Group sample sizes differ; metrics for smaller groups carry more statistical uncertainty.",
+      "The model does not use this attribute as an input feature, but it can still show disparities if correlated features (e.g. geography-linked income fields) act as proxies."
+    ],
+    "denial_rate_by_group": {
+      "Not Hispanic or Latino": 0.4271,
+      "Hispanic or Latino": 0.4998
+    }
+  },
+  "_meta": {
+    "model_version": "v1",
+    "test_rows": 44970,
+    "overall_denial_rate_actual": 0.1998,
+    "overall_denial_rate_predicted": 0.4314
+  }
+}

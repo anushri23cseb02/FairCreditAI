@@ -1,0 +1,35 @@
+# FairCredit AI - Backend (FastAPI) image
+FROM python:3.11-slim
+
+# System dependencies needed to build/py-run mysqlclient wheels, xgboost, etc.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    default-libmysqlclient-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Install Python dependencies first so Docker can cache this layer
+# even when application code changes.
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY backend/ ./backend/
+COPY scripts/ ./scripts/
+
+# Data / model directories are mounted as volumes at runtime, but we
+# create them here too so the image is self-contained if run standalone.
+RUN mkdir -p /app/data/raw /app/data/processed /app/data/reports \
+    /app/models/registry /app/models/artifacts /app/models/metadata \
+    /app/reports/generated
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=15s --timeout=5s --start-period=20s --retries=5 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]

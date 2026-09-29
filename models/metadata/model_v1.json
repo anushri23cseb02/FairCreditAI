@@ -1,0 +1,222 @@
+{
+  "version": "v1",
+  "trained_at_utc": "2026-09-27T17:57:11.888511+00:00",
+  "model_type": "LogisticRegression",
+  "sklearn_pipeline": true,
+  "hyperparameters": {
+    "max_iter": 1000,
+    "class_weight": "balanced",
+    "random_state": 42
+  },
+  "feature_columns_raw": [
+    "loan_amount_000s",
+    "applicant_income_000s",
+    "tract_to_msamd_income",
+    "population",
+    "minority_population",
+    "number_of_owner_occupied_units",
+    "number_of_1_to_4_family_units",
+    "hud_median_family_income",
+    "loan_to_income_ratio",
+    "has_co_applicant",
+    "loan_type_name",
+    "loan_purpose_name",
+    "property_type_name",
+    "owner_occupancy_name",
+    "lien_status_name",
+    "preapproval_name"
+  ],
+  "feature_names_transformed": [
+    "numeric__loan_amount_000s",
+    "numeric__applicant_income_000s",
+    "numeric__tract_to_msamd_income",
+    "numeric__population",
+    "numeric__minority_population",
+    "numeric__number_of_owner_occupied_units",
+    "numeric__number_of_1_to_4_family_units",
+    "numeric__hud_median_family_income",
+    "numeric__loan_to_income_ratio",
+    "numeric__has_co_applicant",
+    "categorical__loan_type_name_Conventional",
+    "categorical__loan_type_name_FHA-insured",
+    "categorical__loan_type_name_FSA/RHS-guaranteed",
+    "categorical__loan_type_name_VA-guaranteed",
+    "categorical__loan_purpose_name_Home improvement",
+    "categorical__loan_purpose_name_Home purchase",
+    "categorical__loan_purpose_name_Refinancing",
+    "categorical__property_type_name_Manufactured housing",
+    "categorical__property_type_name_One-to-four family dwelling (other than manufactured housing)",
+    "categorical__owner_occupancy_name_Not applicable",
+    "categorical__owner_occupancy_name_Not owner-occupied as a principal dwelling",
+    "categorical__owner_occupancy_name_Owner-occupied as a principal dwelling",
+    "categorical__lien_status_name_Not secured by a lien",
+    "categorical__lien_status_name_Secured by a first lien",
+    "categorical__lien_status_name_Secured by a subordinate lien",
+    "categorical__preapproval_name_Not applicable",
+    "categorical__preapproval_name_Preapproval was not requested",
+    "categorical__preapproval_name_Preapproval was requested"
+  ],
+  "target_column": "denied",
+  "training_rows": 254829,
+  "test_rows": 44970,
+  "validation_metrics_before_refit": {
+    "accuracy": 0.6469,
+    "precision": 0.3227,
+    "recall": 0.6985,
+    "f1": 0.4414,
+    "roc_auc": 0.7248,
+    "confusion_matrix": {
+      "labels": [
+        "not_denied(0)",
+        "denied(1)"
+      ],
+      "matrix": [
+        [
+          22815,
+          13172
+        ],
+        [
+          2708,
+          6275
+        ]
+      ]
+    },
+    "classification_report": {
+      "0": {
+        "precision": 0.8938996199506327,
+        "recall": 0.6339789368383028,
+        "f1-score": 0.7418305966509511,
+        "support": 35987.0
+      },
+      "1": {
+        "precision": 0.3226718774103975,
+        "recall": 0.6985416898586219,
+        "f1-score": 0.44143510376363,
+        "support": 8983.0
+      },
+      "accuracy": 0.6468756949077162,
+      "macro avg": {
+        "precision": 0.6082857486805151,
+        "recall": 0.6662603133484624,
+        "f1-score": 0.5916328502072905,
+        "support": 44970.0
+      },
+      "weighted avg": {
+        "precision": 0.7797937980418284,
+        "recall": 0.6468756949077162,
+        "f1-score": 0.6818249770688563,
+        "support": 44970.0
+      }
+    },
+    "n_samples": 44970,
+    "positive_rate_actual": 0.1998,
+    "positive_rate_predicted": 0.4324
+  },
+  "held_out_test_metrics_before_refit": {
+    "accuracy": 0.6451,
+    "precision": 0.3202,
+    "recall": 0.6913,
+    "f1": 0.4377,
+    "roc_auc": 0.7192,
+    "confusion_matrix": {
+      "labels": [
+        "not_denied(0)",
+        "denied(1)"
+      ],
+      "matrix": [
+        [
+          22802,
+          13185
+        ],
+        [
+          2773,
+          6210
+        ]
+      ]
+    },
+    "classification_report": {
+      "0": {
+        "precision": 0.8915738025415445,
+        "recall": 0.6336176952788507,
+        "f1-score": 0.7407816510184855,
+        "support": 35987.0
+      },
+      "1": {
+        "precision": 0.32018561484918795,
+        "recall": 0.6913057998441501,
+        "f1-score": 0.437662978363521,
+        "support": 8983.0
+      },
+      "accuracy": 0.645141205247943,
+      "macro avg": {
+        "precision": 0.6058797086953662,
+        "recall": 0.6624617475615004,
+        "f1-score": 0.5892223146910033,
+        "support": 44970.0
+      },
+      "weighted avg": {
+        "precision": 0.777435930848406,
+        "recall": 0.645141205247943,
+        "f1-score": 0.6802320615931009,
+        "support": 44970.0
+      }
+    },
+    "n_samples": 44970,
+    "positive_rate_actual": 0.1998,
+    "positive_rate_predicted": 0.4313
+  },
+  "held_out_test_metrics_final_model": {
+    "accuracy": 0.6454,
+    "precision": 0.3205,
+    "recall": 0.6923,
+    "f1": 0.4382,
+    "roc_auc": 0.7194,
+    "confusion_matrix": {
+      "labels": [
+        "not_denied(0)",
+        "denied(1)"
+      ],
+      "matrix": [
+        [
+          22804,
+          13183
+        ],
+        [
+          2764,
+          6219
+        ]
+      ]
+    },
+    "classification_report": {
+      "0": {
+        "precision": 0.8918961201501877,
+        "recall": 0.6336732709033818,
+        "f1-score": 0.7409308748273902,
+        "support": 35987.0
+      },
+      "1": {
+        "precision": 0.32053396557055974,
+        "recall": 0.6923076923076923,
+        "f1-score": 0.4381891844283953,
+        "support": 8983.0
+      },
+      "accuracy": 0.6453858127640649,
+      "macro avg": {
+        "precision": 0.6062150428603738,
+        "recall": 0.662990481605537,
+        "f1-score": 0.5895600296278927,
+        "support": 44970.0
+      },
+      "weighted avg": {
+        "precision": 0.7777634487116999,
+        "recall": 0.6453858127640649,
+        "f1-score": 0.6804565896405063,
+        "support": 44970.0
+      }
+    },
+    "n_samples": 44970,
+    "positive_rate_actual": 0.1998,
+    "positive_rate_predicted": 0.4314
+  },
+  "notes": "final_model is refit on train+val and is the artifact actually persisted; held_out_test_metrics_final_model is the metric set the API/dashboard display, since it reflects the exact persisted model evaluated on data it never saw."
+}

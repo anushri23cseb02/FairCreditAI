@@ -1,0 +1,93 @@
+{
+  "raw_row_count": 466566,
+  "action_taken_value_counts": {
+    "Loan originated": 263712,
+    "Application denied by financial institution": 64177,
+    "Application withdrawn by applicant": 60358,
+    "Loan purchased by the institution": 48356,
+    "File closed for incompleteness": 18176,
+    "Application approved but not accepted": 11735,
+    "Preapproval request denied by financial institution": 35,
+    "Preapproval request approved but not accepted": 17
+  },
+  "rows_after_target_filter": 327889,
+  "rows_excluded_ambiguous_action": 138677,
+  "target_class_balance": {
+    "0": 0.8042721774746941,
+    "1": 0.19572782252530582
+  },
+  "duplicate_rows_dropped": 2284,
+  "rows_dropped_invalid_income_or_loan_amount": 25806,
+  "outliers_capped_at_p99_5": {
+    "loan_amount_000s": 1497,
+    "applicant_income_000s": 1498
+  },
+  "missing_value_fraction_by_feature": {
+    "loan_amount_000s": 0.0,
+    "applicant_income_000s": 0.0,
+    "tract_to_msamd_income": 0.0006,
+    "population": 0.0006,
+    "minority_population": 0.0006,
+    "number_of_owner_occupied_units": 0.0006,
+    "number_of_1_to_4_family_units": 0.0006,
+    "hud_median_family_income": 0.0006,
+    "loan_to_income_ratio": 0.0,
+    "has_co_applicant": 0.0,
+    "loan_type_name": 0.0,
+    "loan_purpose_name": 0.0,
+    "property_type_name": 0.0,
+    "owner_occupancy_name": 0.0,
+    "lien_status_name": 0.0,
+    "preapproval_name": 0.0
+  },
+  "protected_attribute_slices": {
+    "sex": {
+      "column": "applicant_sex_name",
+      "privileged_group": "Male",
+      "comparison_group": "Female",
+      "value_counts_all_rows": {
+        "Male": 194601,
+        "Female": 78183,
+        "Information not provided by applicant in mail, Internet, or telephone application": 26993,
+        "Not applicable": 22
+      },
+      "privileged_group_n": 194601,
+      "comparison_group_n": 78183
+    },
+    "race": {
+      "column": "applicant_race_name_1",
+      "privileged_group": "White",
+      "comparison_group": "Black or African American",
+      "value_counts_all_rows": {
+        "White": 219362,
+        "Information not provided by applicant in mail, Internet, or telephone application": 41787,
+        "Asian": 26514,
+        "Black or African American": 6777,
+        "American Indian or Alaska Native": 2915,
+        "Native Hawaiian or Other Pacific Islander": 2427,
+        "Not applicable": 17
+      },
+      "privileged_group_n": 219362,
+      "comparison_group_n": 6777
+    },
+    "ethnicity": {
+      "column": "applicant_ethnicity_name",
+      "privileged_group": "Not Hispanic or Latino",
+      "comparison_group": "Hispanic or Latino",
+      "value_counts_all_rows": {
+        "Not Hispanic or Latino": 243573,
+        "Information not provided by applicant in mail, Internet, or telephone application": 40613,
+        "Hispanic or Latino": 15548,
+        "Not applicable": 65
+      },
+      "privileged_group_n": 243573,
+      "comparison_group_n": 15548
+    }
+  },
+  "split_sizes": {
+    "train": 209859,
+    "val": 44970,
+    "test": 44970
+  },
+  "split_strategy": "70/15/15 train/val/test, stratified on the target, random_state=42."
+}

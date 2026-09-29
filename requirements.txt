@@ -1,0 +1,35 @@
+# =============================================================
+# FairCredit AI - Production dependencies
+# Pinned to versions known to work together on Python 3.11/3.12.
+# =============================================================
+
+# --- Web frameworks -------------------------------------------------
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+streamlit==1.36.0
+
+# --- Data / ML --------------------------------------------------------
+pandas==2.2.2
+numpy==1.26.4
+scikit-learn==1.5.0
+xgboost==2.0.3
+shap==0.45.1
+fairlearn==0.10.0
+joblib==1.4.2
+
+# --- Database ---------------------------------------------------------
+sqlalchemy==2.0.30
+pymysql==1.1.1
+cryptography==42.0.7
+
+# --- Config / validation -----------------------------------------------
+python-dotenv==1.0.1
+pydantic==2.7.1
+pydantic-settings==2.2.1
+
+# --- HTTP client (frontend -> backend, and used in tests) -----------------
+httpx==0.27.0
+requests==2.32.3
+
+# --- Testing (kept here too since scripts/tests run inside the same image)
+pytest==8.2.1

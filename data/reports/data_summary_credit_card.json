@@ -1,0 +1,67 @@
+{
+  "dataset_name": "UCI Default of Credit Card Clients",
+  "raw_row_count": 30000,
+  "raw_column_count": 25,
+  "target_class_balance": {
+    "0": 0.7788,
+    "1": 0.2212
+  },
+  "duplicate_rows_dropped": 35,
+  "education_raw_value_counts": {
+    "2": 14019,
+    "1": 10563,
+    "3": 4915,
+    "5": 280,
+    "4": 123,
+    "6": 51,
+    "0": 14
+  },
+  "marriage_raw_value_counts": {
+    "2": 15945,
+    "1": 13643,
+    "3": 323,
+    "0": 54
+  },
+  "age_band_counts": {
+    "Under 35": 15674,
+    "35 and over": 14291
+  },
+  "missing_value_fraction_by_feature": {
+    "LIMIT_BAL": 0.0,
+    "AGE": 0.0,
+    "PAY_0": 0.0,
+    "PAY_2": 0.0,
+    "PAY_3": 0.0,
+    "PAY_4": 0.0,
+    "PAY_5": 0.0,
+    "PAY_6": 0.0,
+    "BILL_AMT1": 0.0,
+    "BILL_AMT2": 0.0,
+    "BILL_AMT3": 0.0,
+    "BILL_AMT4": 0.0,
+    "BILL_AMT5": 0.0,
+    "BILL_AMT6": 0.0,
+    "PAY_AMT1": 0.0,
+    "PAY_AMT2": 0.0,
+    "PAY_AMT3": 0.0,
+    "PAY_AMT4": 0.0,
+    "PAY_AMT5": 0.0,
+    "PAY_AMT6": 0.0,
+    "EDUCATION": 0.0,
+    "MARRIAGE": 0.0
+  },
+  "split_sizes": {
+    "train": 20975,
+    "val": 4495,
+    "test": 4495
+  },
+  "split_strategy": "70/15/15 train/val/test, stratified on target, random_state=42",
+  "protected_attributes": {
+    "sex": {
+      "column": "SEX",
+      "privileged": "Male",
+      "comparison": "Female"
+    }
+  },
+  "leakage_review": "BILL_AMT1-6 and PAY_AMT1-6 are the 6 statement months preceding the target month (next month's default) -- historical behaviour, not post-decision information. No denial-reason-style or outcome-adjacent columns exist in this dataset."
+}
