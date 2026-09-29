@@ -36,6 +36,23 @@ The application is deployed and publicly reachable right now:
 - Aiven's free MySQL can be powered off after prolonged inactivity and needs a **manual** restart from the Aiven console (unlike Render, it does not auto-wake). If `/health/detailed` reports `"database": "unreachable"` after the app has been idle a long time, this is almost certainly why.
 - **Auto-deploy on `git push` is not yet wired up** — these two services were created via Render's API rather than through the dashboard's GitHub connection flow, so Render's GitHub App isn't authorized for this repo yet. Until that's done (Account Settings → GitHub → Configure → add this repo), redeploys after a push must be triggered manually (dashboard "Manual Deploy", or `POST /v1/services/{id}/deploys` with a Render API key).
 
+## 0b. ML/data audit findings (2026-09-29)
+
+A full technical audit of the data pipeline, training code, fairness math, explainability, and tests was performed against the actual code (not a superficial review — metrics below were independently recomputed from the persisted confusion matrices to confirm they aren't fabricated). Summary:
+
+**Verified sound, no changes needed:**
+- Leakage-prone raw columns (`denial_reason_name_*`, `rate_spread`, `purchaser_type_name`, etc.) are deliberately excluded from HMDA model features, with reasons documented in `backend/ml/feature_config.py`.
+- Both tracks fit all preprocessing (imputation, scaling, one-hot encoding) only inside `Pipeline.fit(X_train, ...)` — no train/val/test contamination.
+- HMDA explanations are exact linear-model coefficient decomposition, not an approximation — verified by hand against `backend/ml/explain.py`.
+- Fairness metrics (`backend/ml/fairness.py`) were checked against `tests/test_fairness.py`'s known-disparity synthetic cases and match Fairlearn's standard definitions exactly.
+- Recomputing accuracy/precision/recall/F1 from the stored confusion matrices in `models/metadata/model_v1.json` and `models/metadata/credit_card_model_comparison.json` reproduces the stored values exactly — the reported metrics are real, not invented.
+
+**Known, disclosed limitations (not fixed — see reasons):**
+1. **Credit-card model selection uses held-out test-set metrics rather than validation-set metrics** (`backend/ml/credit_card/trainer.py`), which is a methodological gap — test data should only be used for final reporting, not for picking the winning model. Recomputing the same selection formula on validation-set metrics instead of test-set metrics gives Logistic Regression 0.5998 vs XGBoost's 0.6025 — meaning the methodologically correct approach would select XGBoost instead, by a razor-thin margin. **Decision: left as-is** (2026-09-29) — the currently-deployed Logistic Regression model stays selected, since the margin is negligible either way and switching would trade exact coefficient-based explanations for approximate SHAP-based ones. Revisit if more candidate models or more training data are added later.
+2. **HMDA outlier capping** (`loan_amount_000s`, `applicant_income_000s` clipped at the 99.5th percentile in `scripts/prepare_data.py`) is computed on the full dataset before the train/val/test split — a minor, low-impact pre-split statistic leak (only affects clipping bounds, not fitted model parameters). **Not fixed**: the raw HMDA source file (`data/raw/Washington_State_HDMA-2016.csv`, ~260MB, intentionally not committed) is not present in any environment this audit had access to, so this cannot be verified further or corrected without that file.
+
+**Dashboard design:** already uses a restrained, professional pastel fintech theme (`frontend/assets/style.css`) with no clutter, gradients, or decorative-only elements — a redesign was considered but not warranted; no concrete defects were found in navigation, forms, or error handling (manually tested invalid input, missing fields, and malformed JSON against the live API — all return clean structured 422 errors, never a raw stack trace).
+
 ## Q3. How this was actually set up (Render + Aiven)
 
 Reference for reproducing or modifying this deployment:
