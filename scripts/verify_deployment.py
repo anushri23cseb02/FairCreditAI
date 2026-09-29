@@ -11,6 +11,8 @@ Usage (from the project root):
     python scripts/verify_deployment.py --inside-container   # run inside the backend container
     python scripts/verify_deployment.py --skip-docker    # server without the docker CLI
     python scripts/verify_deployment.py --no-predict     # do not send test predictions
+    python scripts/verify_deployment.py --skip-docker --backend-url https://X.up.railway.app \
+        --frontend-url https://Y.up.railway.app --basic-auth admin:secret123  # remote/cloud deployment
 
 Sending the two test predictions writes two rows to the prediction audit tables
 (one per track). Use --no-predict if you do not want that.
@@ -21,6 +23,7 @@ WARN lines do not fail the run; they point at features that are degraded.
 from __future__ import annotations
 
 import argparse
+import base64
 import json
 import os
 import subprocess
@@ -54,6 +57,7 @@ CARD_SAMPLE = {
 }
 
 RESULTS: list[tuple[str, str, str]] = []  # (status, name, detail)
+BASIC_AUTH_HEADER: str | None = None  # set by --basic-auth, e.g. "admin:secret123"
 
 
 def record(status: str, name: str, detail: str = "") -> None:
@@ -77,6 +81,8 @@ def http(method: str, url: str, body: dict | None = None, timeout: int = 15):
     """Returns (status_code, parsed_json_or_text). Never raises; status 0 = unreachable."""
     data = json.dumps(body).encode() if body is not None else None
     headers = {"Content-Type": "application/json"} if body is not None else {}
+    if BASIC_AUTH_HEADER:
+        headers["Authorization"] = f"Basic {BASIC_AUTH_HEADER}"
     req = urllib.request.Request(url, data=data, headers=headers, method=method)
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
@@ -308,7 +314,18 @@ def main() -> int:
     ap.add_argument("--no-predict", action="store_true", help="do not send test predictions (they write audit rows)")
     ap.add_argument("--backend-url", default=None)
     ap.add_argument("--frontend-url", default=None)
+    ap.add_argument(
+        "--basic-auth",
+        default=None,
+        metavar="USER:PASS",
+        help="send this as HTTP Basic Auth on every backend request (needed when "
+        "APP_BASIC_AUTH_USER/PASSWORD are set on the deployment, e.g. Railway)",
+    )
     args = ap.parse_args()
+
+    if args.basic_auth:
+        global BASIC_AUTH_HEADER
+        BASIC_AUTH_HEADER = base64.b64encode(args.basic_auth.encode("utf-8")).decode("ascii")
 
     inside = args.inside_container
     backend = args.backend_url or ("http://localhost:8000")
