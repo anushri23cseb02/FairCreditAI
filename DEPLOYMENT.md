@@ -231,7 +231,7 @@ The stack runs anywhere Docker and Compose run (any Linux VM). No cloud-specific
 1. Install Docker Engine + Compose plugin, copy the project, run `./start.sh`.
 2. Keep MySQL private (already loopback-only). Expose only what you need — ideally only the reverse proxy (443), not 8501/8000 directly (remove those `ports:` lines or firewall them).
 3. Use strong passwords in `.env`; keep `APP_DEBUG=false` (the default in `.env.example`); restrict `CORS_ORIGINS` to your real site URL.
-4. This application has **no user login**. Do not put it on the public internet without authentication in front of it (for example basic auth or SSO at the reverse proxy).
+4. This application has **no user login by default**. Do not put it on the public internet without authentication in front of it — either set `APP_BASIC_AUTH_USER` / `APP_BASIC_AUTH_PASSWORD` (built-in, see section Q2) or add basic auth / SSO at the reverse proxy.
 
 ### HTTPS behind Nginx (optional, not enabled by default)
 
@@ -258,9 +258,82 @@ server {
 }
 ```
 
+## Q2. Deploying to Railway (public HTTPS, no laptop/Docker Desktop dependency)
+
+This uses the same `Dockerfile.backend` / `Dockerfile.frontend` as sections A-P — Railway
+just builds and runs them on Railway's infrastructure instead of your machine. Repo:
+`https://github.com/<your-account>/FairCreditAI`.
+
+**1. Create the project and three services**, all from the same GitHub repo:
+
+- New Project → **Deploy from GitHub repo** → select `FairCreditAI`.
+- Railway creates one service from the repo root. Rename it `backend`, then in its
+  **Settings → Build**, set **Dockerfile Path** to `Dockerfile.backend`.
+- **+ New → GitHub Repo** → same repo again → rename it `frontend` → set **Dockerfile Path**
+  to `Dockerfile.frontend`.
+- **+ New → Database → Add MySQL.**
+
+Each service redeploys automatically on every `git push` to `main`, once connected this way —
+that is the whole CI/CD loop (GitHub Actions in `.github/workflows/ci.yml` runs the tests;
+Railway does the deploy).
+
+**2. Backend service → Variables:**
+
+```
+DATABASE_URL=mysql+pymysql://${{MySQL.MYSQLUSER}}:${{MySQL.MYSQLPASSWORD}}@${{MySQL.MYSQLHOST}}:${{MySQL.MYSQLPORT}}/${{MySQL.MYSQLDATABASE}}
+APP_ENV=production
+APP_DEBUG=false
+CORS_ORIGINS=https://<frontend-service>.up.railway.app
+APP_BASIC_AUTH_USER=<choose a username>
+APP_BASIC_AUTH_PASSWORD=<choose a strong password>
+```
+
+`${{MySQL.*}}` are Railway's reference variables — they pull the actual values from the MySQL
+service automatically; don't hand-type database credentials. Do **not** set `PORT` yourself —
+Railway injects it, and the Dockerfile already reads `$PORT` (see the Docker fix below).
+
+**3. Frontend service → Variables:**
+
+```
+BACKEND_URL=https://<backend-service>.up.railway.app
+APP_BASIC_AUTH_USER=<same username as backend>
+APP_BASIC_AUTH_PASSWORD=<same password as backend>
+```
+
+**4. Generate public domains:** in each of `backend` and `frontend` → **Settings → Networking
+→ Generate Domain**. These are the real `https://*.up.railway.app` URLs — HTTPS is automatic,
+no certificate setup needed. The frontend's is the one you share with users.
+
+**5. Health checks:** set the backend service's health check path to `/health` (Settings →
+Deploy) so Railway restarts it automatically if it ever stops responding.
+
+**6. Why this works without your laptop:** `Dockerfile.backend` now `COPY`s `models/` and
+`data/` into the image at build time (previously they only existed via a docker-compose bind
+mount, which has nothing to bind to on Railway) — so the deployed backend loads the same
+trained models this repo ships, with no volume or manual upload step.
+
+**7. Verify the live deployment** from any machine:
+
+```
+python scripts/verify_deployment.py --skip-docker \
+  --backend-url https://<backend-service>.up.railway.app \
+  --frontend-url https://<frontend-service>.up.railway.app \
+  --basic-auth <username>:<password>
+```
+
+**8. Auth note:** setting `APP_BASIC_AUTH_USER`/`APP_BASIC_AUTH_PASSWORD` is what turns on the
+login gate described in section R below. Leaving them unset on Railway would put this
+no-login app on the open internet — not recommended, since `/train` and
+`/credit-card/train` would be publicly callable by anyone with the URL.
+
+**9. Cost:** Railway is not free for something running 24/7 — three always-on services
+(backend + frontend + MySQL) exceed the free trial credit; check Railway's current pricing
+before leaving this running long-term.
+
 ## R. Security summary
 
-- Secrets live only in `.env` (git-ignored, excluded from Docker images by `.dockerignore`).
-- MySQL is not reachable from the network (loopback publish only).
+- Secrets live only in `.env` (git-ignored, excluded from Docker images by `.dockerignore`) locally, or in the host platform's environment variables (e.g. Railway's Variables tab) in the cloud — never in source code.
+- MySQL is not reachable from the network locally (loopback publish only); on Railway, don't expose the MySQL service's public networking unless you genuinely need external DB access.
 - Passwords are not printed by any script or log. Keep `APP_DEBUG=false`: `true` logs SQL statements including applicant input values.
 - Containers currently run as root inside the container (the images were not changed for this deployment). See the limitations in the delivery report.
+- Optional built-in HTTP Basic Auth (`APP_BASIC_AUTH_USER` / `APP_BASIC_AUTH_PASSWORD`, both blank by default): when set, gates the whole API (except `/health`) and every Streamlit page. See section Q2.
