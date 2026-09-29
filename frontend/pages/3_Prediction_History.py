@@ -16,6 +16,8 @@ from frontend.components.cards import metric_card, section_header, status_badge
 from frontend.services import api_client
 
 st.set_page_config(page_title="Prediction History - FairCreditAI", page_icon="📜", layout="wide")
+from frontend.services.auth_gate import require_auth
+require_auth()
 
 section_header("Prediction History", "Every prediction made through this application, stored in MySQL.")
 

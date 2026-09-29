@@ -47,6 +47,13 @@ class Settings(BaseSettings):
     # --- Frontend ---
     backend_url: str = Field(default="http://backend:8000", alias="BACKEND_URL")
 
+    # --- Optional public-deployment auth ---
+    # When both are set, the whole API (except /health) requires HTTP
+    # Basic Auth. Left blank, the API is open -- unchanged local/dev
+    # behaviour.
+    basic_auth_user: str = Field(default="", alias="APP_BASIC_AUTH_USER")
+    basic_auth_password: str = Field(default="", alias="APP_BASIC_AUTH_PASSWORD")
+
     @property
     def cors_origin_list(self) -> List[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]

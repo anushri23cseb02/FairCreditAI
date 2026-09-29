@@ -22,6 +22,7 @@ from backend.api.routes_train import router as train_router
 from backend.api.routes_credit_card import router as credit_card_router
 from backend.core.config import get_settings
 from backend.core.logging_config import configure_logging
+from backend.core.security import BasicAuthMiddleware
 
 settings = get_settings()
 configure_logging(debug=settings.app_debug)
@@ -58,6 +59,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# --- Optional public-deployment auth -----------------------------------
+# Only enforced when both env vars are set (e.g. on Railway); left blank,
+# the API is open, matching prior local/dev behaviour.
+if settings.basic_auth_user and settings.basic_auth_password:
+    app.add_middleware(
+        BasicAuthMiddleware,
+        username=settings.basic_auth_user,
+        password=settings.basic_auth_password,
+    )
 
 
 # --- Global exception handling ----------------------------------------

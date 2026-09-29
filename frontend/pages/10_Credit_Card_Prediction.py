@@ -14,6 +14,8 @@ from frontend.components.cards import metric_card, section_header, status_badge
 from frontend.services import api_client
 
 st.set_page_config(page_title="Credit Card Risk - FairCreditAI", page_icon="💳", layout="wide")
+from frontend.services.auth_gate import require_auth
+require_auth()
 
 section_header("Credit Card Risk Prediction", "Track A — UCI Default of Credit Card Clients dataset.")
 

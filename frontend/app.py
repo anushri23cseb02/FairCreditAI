@@ -18,6 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from frontend.components.cards import metric_card, section_header, status_badge
 from frontend.components.sidebar import render_sidebar_branding
 from frontend.services import api_client
+from frontend.services.auth_gate import require_auth
 
 st.set_page_config(
     page_title="FairCredit AI",
@@ -25,6 +26,8 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+require_auth()
 
 
 def load_css() -> None:

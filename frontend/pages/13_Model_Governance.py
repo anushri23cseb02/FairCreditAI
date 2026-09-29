@@ -15,6 +15,8 @@ from frontend.components.cards import section_header, status_badge
 from frontend.services import api_client
 
 st.set_page_config(page_title="Model Governance - FairCreditAI", page_icon="📋", layout="wide")
+from frontend.services.auth_gate import require_auth
+require_auth()
 
 section_header("Model Governance", "Model card for both tracks — intended use, limitations, and current live configuration.")
 

@@ -9,6 +9,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 from frontend.components.cards import section_header
 
 st.set_page_config(page_title="About - FairCreditAI", page_icon="📘", layout="wide")
+from frontend.services.auth_gate import require_auth
+require_auth()
 
 section_header("About FairCredit AI", "Explainable & Fair Credit Risk Prediction System")
 
