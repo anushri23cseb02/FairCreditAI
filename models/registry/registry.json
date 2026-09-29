@@ -11,10 +11,10 @@
     "active_model": "logistic_regression",
     "trained_at_utc": "2026-09-29T09:35:30.432294+00:00",
     "artifact_paths": {
-      "logistic_regression": "models\\artifacts\\credit_card_logistic_regression.joblib",
-      "random_forest": "models\\artifacts\\credit_card_random_forest.joblib",
-      "xgboost": "models\\artifacts\\credit_card_xgboost.joblib"
+      "logistic_regression": "models/artifacts/credit_card_logistic_regression.joblib",
+      "random_forest": "models/artifacts/credit_card_random_forest.joblib",
+      "xgboost": "models/artifacts/credit_card_xgboost.joblib"
     },
-    "metadata_path": "models\\metadata\\credit_card_model_comparison.json"
+    "metadata_path": "models/metadata/credit_card_model_comparison.json"
   }
 }

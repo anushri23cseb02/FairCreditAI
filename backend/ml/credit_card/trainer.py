@@ -252,8 +252,8 @@ def train_and_compare() -> dict:
     registry["credit_card"] = {
         "active_model": selected_model_name,
         "trained_at_utc": trained_at,
-        "artifact_paths": {n: str((ARTIFACTS_DIR / f"credit_card_{n}.joblib").relative_to(PROJECT_ROOT)) for n in results},
-        "metadata_path": str((METADATA_DIR / "credit_card_model_comparison.json").relative_to(PROJECT_ROOT)),
+        "artifact_paths": {n: (ARTIFACTS_DIR / f"credit_card_{n}.joblib").relative_to(PROJECT_ROOT).as_posix() for n in results},
+        "metadata_path": (METADATA_DIR / "credit_card_model_comparison.json").relative_to(PROJECT_ROOT).as_posix(),
     }
     with open(registry_path, "w") as f:
         json.dump(registry, f, indent=2)

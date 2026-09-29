@@ -143,8 +143,8 @@ def train_and_persist(version: str = "v1") -> dict:
     registry["active_version"] = version
     registry.setdefault("versions", {})
     registry["versions"][version] = {
-        "artifact_path": str(artifact_path.relative_to(PROJECT_ROOT)),
-        "metadata_path": str(metadata_path.relative_to(PROJECT_ROOT)),
+        "artifact_path": artifact_path.relative_to(PROJECT_ROOT).as_posix(),
+        "metadata_path": metadata_path.relative_to(PROJECT_ROOT).as_posix(),
         "trained_at_utc": metadata["trained_at_utc"],
     }
     with open(registry_path, "w") as f:
