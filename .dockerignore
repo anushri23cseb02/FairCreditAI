@@ -1,6 +1,7 @@
 # Keep the Docker build context small and free of secrets.
-# The Dockerfiles only COPY backend/, scripts/, frontend/ and requirements.txt;
-# data/, models/ and reports/ are mounted as volumes at runtime (docker-compose.yml).
+# data/ and models/ ARE needed: Dockerfile.backend COPYs the committed
+# model artifacts and datasets into the image (no host volume on a
+# standalone cloud deploy). reports/ is runtime-generated output only.
 .git
 .gitignore
 .env
@@ -10,11 +11,10 @@
 **/*.pyc
 .pytest_cache
 .venv
+.venv_check
 venv
 .vscode
 .idea
-data/
-models/
 reports/
 tests/
 *.zip

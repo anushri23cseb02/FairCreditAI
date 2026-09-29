@@ -21,15 +21,19 @@ RUN pip install --no-cache-dir --upgrade pip \
 COPY backend/ ./backend/
 COPY scripts/ ./scripts/
 
-# Data / model directories are mounted as volumes at runtime, but we
-# create them here too so the image is self-contained if run standalone.
-RUN mkdir -p /app/data/raw /app/data/processed /app/data/reports \
-    /app/models/registry /app/models/artifacts /app/models/metadata \
-    /app/reports/generated
+# Data / model directories are bind-mounted as volumes under docker-compose
+# for local dev, but a standalone deploy (e.g. Railway) has no host
+# filesystem to mount from -- so the committed artifacts/data must be
+# baked into the image here too.
+COPY data/ ./data/
+COPY models/ ./models/
+RUN mkdir -p /app/reports/generated
 
 EXPOSE 8000
 
 HEALTHCHECK --interval=15s --timeout=5s --start-period=20s --retries=5 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:${PORT:-8000}/health || exit 1
 
-CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Shell form so $PORT (injected by cloud hosts like Railway) is honored;
+# falls back to 8000 for local docker-compose, which doesn't set PORT.
+CMD ["sh", "-c", "uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
