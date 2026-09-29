@@ -17,6 +17,48 @@ This guide only covers **running the existing application on another computer**.
                                                  ./data    (datasets, reports)
 ```
 
+## 0. Current production deployment (live)
+
+The application is deployed and publicly reachable right now:
+
+| What | URL |
+|---|---|
+| **App (Streamlit)** | https://faircredit-frontend.onrender.com |
+| **API** | https://faircredit-backend.onrender.com |
+| **API docs (Swagger)** | https://faircredit-backend.onrender.com/docs |
+
+**Stack:** [Render](https://render.com) hosts both `Dockerfile.backend` and `Dockerfile.frontend` as free-tier web services; [Aiven](https://aiven.io) hosts the free-tier MySQL database (TLS-only, see `DB_SSL_CA_PATH` in section L). No laptop, Docker Desktop, or local process is involved in serving this — it runs entirely on those two providers.
+
+**Access:** the whole app is behind HTTP Basic Auth (`APP_BASIC_AUTH_USER` / `APP_BASIC_AUTH_PASSWORD`, set as Render env vars — see section Q3 and the security note in section R). Credentials aren't in this file; ask whoever deployed it, or read them from the Render dashboard's Environment tab.
+
+**Known free-tier trade-offs:**
+- Render's free web services sleep after 15 minutes of inactivity; the next request wakes them in 30-60 seconds. This is normal, not a bug.
+- Aiven's free MySQL can be powered off after prolonged inactivity and needs a **manual** restart from the Aiven console (unlike Render, it does not auto-wake). If `/health/detailed` reports `"database": "unreachable"` after the app has been idle a long time, this is almost certainly why.
+- **Auto-deploy on `git push` is not yet wired up** — these two services were created via Render's API rather than through the dashboard's GitHub connection flow, so Render's GitHub App isn't authorized for this repo yet. Until that's done (Account Settings → GitHub → Configure → add this repo), redeploys after a push must be triggered manually (dashboard "Manual Deploy", or `POST /v1/services/{id}/deploys` with a Render API key).
+
+## Q3. How this was actually set up (Render + Aiven)
+
+Reference for reproducing or modifying this deployment:
+
+**Aiven MySQL:**
+```
+avn service create faircredit-mysql --project <project> --service-type mysql --plan free-1-1gb --cloud do-sgp
+avn project ca-get --project <project> --target-filepath backend/aiven-ca.pem   # committed to the repo -- public CA cert, not a secret
+avn service user-password-reset faircredit-mysql --project <project> --username avnadmin --new-password '<generated>'
+```
+Free MySQL plans are only available on DigitalOcean/UpCloud regions, not AWS/GCP/Azure — Aiven's API returns a clear 403 with the allowed cloud list if you pick an unsupported one.
+
+**Render (backend + frontend):** created directly via Render's REST API (`POST /v1/services`) rather than `render.yaml`, because the Render CLI's `services create` has no flag for a custom Dockerfile path — only the Blueprint YAML and the raw API support `serviceDetails.envSpecificDetails.dockerfilePath`. Each service points at a different Dockerfile in the same repo:
+```json
+{"type": "web_service", "name": "faircredit-backend", "repo": "https://github.com/<org>/FairCreditAI",
+ "serviceDetails": {"runtime": "docker", "plan": "free", "region": "singapore",
+   "envSpecificDetails": {"dockerfilePath": "./Dockerfile.backend", "dockerContext": "."},
+   "healthCheckPath": "/health"}}
+```
+Env vars were set with `PUT /v1/services/{id}/env-vars`, then a deploy was explicitly triggered with `POST /v1/services/{id}/deploys` -- setting env vars alone does **not** restart the already-building/running instance.
+
+`render.yaml` (committed at the repo root) documents the same two services declaratively and is the easier path if creating this fresh through the Render dashboard's Blueprint flow instead of the API.
+
 ## A. Prerequisites
 
 Only one thing needs installing:
